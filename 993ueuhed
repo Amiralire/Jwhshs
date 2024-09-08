@@ -1,0 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# تعداد آدرس‌های IPv4 را که می‌خواهید تولید کنید
+COUNT=10
+
+generate_ipv4() {
+    echo "$((RANDOM % 255 + 1)).$((RANDOM % 256)).$((RANDOM % 256)).$((RANDOM % 256))"
+}
+
+# تولید و چاپ آدرس‌های IPv4
+for ((i=0; i<COUNT; i++)); do
+    generate_ipv4
+done
