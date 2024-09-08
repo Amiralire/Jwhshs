@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# تابع تولید IP تصادفی از یک محدوده مشخص
+generate_random_ip() {
+    # محدوده IP ورودی
+    IFS='-' read -r start_ip end_ip <<< "$1"
+
+    # تبدیل IP شروع و پایان به عدد
+    ip_to_number() {
+        local ip=$1
+        local a b c d
+        IFS=. read -r a b c d <<< "$ip"
+        echo "$((a * 256**3 + b * 256**2 + c * 256 + d))"
+    }
+
+    # تبدیل عدد به IP
+    number_to_ip() {
+        local num=$1
+        echo "$(( (num >> 24) & 255 )).$(( (num >> 16) & 255 )).$(( (num >> 8) & 255 )).$(( num & 255 ))"
+    }
+
+    # تولید عدد تصادفی بین شروع و پایان
+    start_num=$(ip_to_number "$start_ip")
+    end_num=$(ip_to_number "$end_ip")
+    random_num=$((RANDOM % (end_num - start_num + 1) + start_num))
+
+    # تبدیل عدد تصادفی به IP
+    number_to_ip "$random_num"
+}
+
+# محدوده‌های IP برای کشورهای مشخص شده (نمونه)
+emirates_range="5.31.168.0-5.31.168.255"
+iraq_range="37.236.0.0-37.236.0.255"
+egypt_range="41.178.0.0-41.178.255.255"
+saudi_range="2.88.0.0-2.88.255.255"
+
+# کشورهای مورد نظر
+countries=("امارات" "عراق" "مصر" "عربستان")
+ranges=("$emirates_range" "$iraq_range" "$egypt_range" "$saudi_range")
+
+# انتخاب تصادفی یک کشور
+index=$((RANDOM % ${#countries[@]}))
+country=${countries[$index]}
+range=${ranges[$index]}
+
+echo "کشور انتخاب شده: $country"
+echo "آدرس IP تصادفی: $(generate_random_ip $range)"
