@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# تولید آدرس IP نسخه ۴ به صورت تصادفی
+generate_ipv4() {
+    echo "$(shuf -i 1-255 -n 1).$(shuf -i 0-255 -n 1).$(shuf -i 0-255 -n 1).$(shuf -i 0-255 -n 1)"
+}
+
+# تولید آدرس IP نسخه ۶ به صورت تصادفی
+generate_ipv6() {
+    echo "$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom):$(hexdump -n 2 -e '2/1 "%02x"' /dev/urandom)"
+}
+
+# تابع پینگ برای IP نسخه ۴
+ping_ipv4() {
+    local ip=$1
+    echo "پینگ به آدرس IP نسخه ۴: $ip"
+    ping -c 4 $ip
+}
+
+# تابع پینگ برای IP نسخه ۶
+ping_ipv6() {
+    local ip=$1
+    echo "پینگ به آدرس IP نسخه ۶: $ip"
+    ping6 -c 4 $ip
+}
+
+# تولید و پینگ IP نسخه ۴
+ipv4=$(generate_ipv4)
+ping_ipv4 $ipv4
+
+# تولید و پینگ IP نسخه ۶
+ipv6=$(generate_ipv6)
+ping_ipv6 $ipv6
